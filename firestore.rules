@@ -1,0 +1,103 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Default deny catch-all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper functions
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isValidSnippet(data) {
+      return data.title is string && data.title.size() > 0 && data.title.size() <= 100
+        && data.code is string && data.code.size() <= 250000
+        && data.language is string && data.language.size() > 0 && data.language.size() <= 50
+        && data.isPublic is bool
+        && data.ownerId is string && data.ownerId.size() <= 128
+        && data.ownerName is string && data.ownerName.size() <= 100
+        && data.tags is list && data.tags.size() <= 15
+        && (!('ownerPhoto' in data) || (data.ownerPhoto is string && data.ownerPhoto.size() <= 500))
+        && (!('ownerEmail' in data) || (data.ownerEmail is string && data.ownerEmail.size() <= 150))
+        && (!('lastEditedBy' in data) || (data.lastEditedBy is string && data.lastEditedBy.size() <= 100));
+    }
+
+    function isValidPresence(data) {
+      return data.userId is string && data.userId.size() <= 128
+        && data.userName is string && data.userName.size() <= 100
+        && data.cursorLine is number && data.cursorLine >= 1
+        && data.cursorColumn is number && data.cursorColumn >= 1
+        && data.color is string && data.color.size() <= 30
+        && (!('userPhoto' in data) || (data.userPhoto is string && data.userPhoto.size() <= 500));
+    }
+
+    function canAccessSnippet(sId) {
+      let parentDoc = get(/databases/$(database)/documents/snippets/$(sId)).data;
+      return parentDoc.isPublic == true || (isSignedIn() && parentDoc.ownerId == request.auth.uid);
+    }
+
+    // Snippets Collection
+    match /snippets/{snippetId} {
+      allow get: if isValidId(snippetId) && (existing().isPublic == true || (isSignedIn() && existing().ownerId == request.auth.uid));
+      allow list: if resource.data.isPublic == true || (isSignedIn() && resource.data.ownerId == request.auth.uid);
+
+      allow create: if isSignedIn()
+        && isValidId(snippetId)
+        && incoming().ownerId == request.auth.uid
+        && incoming().keys().hasAll(['title', 'code', 'language', 'isPublic', 'ownerId', 'ownerName', 'tags', 'createdAt', 'updatedAt'])
+        && incoming().createdAt == request.time
+        && incoming().updatedAt == request.time
+        && isValidSnippet(incoming());
+
+      allow update: if isSignedIn()
+        && isValidId(snippetId)
+        && isValidSnippet(incoming())
+        && incoming().ownerId == existing().ownerId
+        && incoming().createdAt == existing().createdAt
+        && incoming().updatedAt == request.time
+        && (
+          (existing().ownerId == request.auth.uid && incoming().diff(existing()).affectedKeys().hasOnly(['title', 'code', 'language', 'isPublic', 'tags', 'ownerPhoto', 'ownerEmail', 'updatedAt', 'lastEditedBy']))
+          ||
+          (existing().isPublic == true && incoming().diff(existing()).affectedKeys().hasOnly(['code', 'updatedAt', 'lastEditedBy']))
+        );
+
+      allow delete: if isSignedIn() && isValidId(snippetId) && existing().ownerId == request.auth.uid;
+
+      // Presence Subcollection
+      match /presence/{userId} {
+        allow read: if isValidId(snippetId) && canAccessSnippet(snippetId);
+        allow create, update: if isSignedIn()
+          && isValidId(snippetId)
+          && isValidId(userId)
+          && request.auth.uid == userId
+          && isValidPresence(incoming())
+          && incoming().lastActive == request.time
+          && canAccessSnippet(snippetId);
+        allow delete: if isSignedIn()
+          && isValidId(snippetId)
+          && isValidId(userId)
+          && request.auth.uid == userId;
+      }
+    }
+
+    // Healthcheck / test collection
+    match /test/{testId} {
+      allow read: if true;
+    }
+  }
+}

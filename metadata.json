@@ -1,0 +1,6 @@
+{
+  "name": "DevCollab",
+  "description": "Realtime code snippet sharing with live collaborative editing, syntax highlighting, and presence.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,48 @@
+@import "tailwindcss";
+
+/* Tailwind 4: make dark: classes follow the .dark class (theme toggle), not the OS setting */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer base {
+  :root {
+    --bg-main: #090d16;
+    --bg-card: #111827;
+    --border-color: #1f2937;
+  }
+}
+
+/* Remote collaborator cursors in Monaco (one class pair per palette color) */
+.rc-cursor-0::before { content: ''; display: inline-block; width: 2px; height: 1.3em; margin-left: -1px; vertical-align: text-bottom; background: #ef4444; }
+.rc-label-0 { background: #ef4444; color: #fff; font-size: 10px; font-weight: 700; padding: 0 4px; margin-left: 2px; border-radius: 3px; }
+.rc-cursor-1::before { content: ''; display: inline-block; width: 2px; height: 1.3em; margin-left: -1px; vertical-align: text-bottom; background: #f97316; }
+.rc-label-1 { background: #f97316; color: #fff; font-size: 10px; font-weight: 700; padding: 0 4px; margin-left: 2px; border-radius: 3px; }
+.rc-cursor-2::before { content: ''; display: inline-block; width: 2px; height: 1.3em; margin-left: -1px; vertical-align: text-bottom; background: #eab308; }
+.rc-label-2 { background: #eab308; color: #fff; font-size: 10px; font-weight: 700; padding: 0 4px; margin-left: 2px; border-radius: 3px; }
+.rc-cursor-3::before { content: ''; display: inline-block; width: 2px; height: 1.3em; margin-left: -1px; vertical-align: text-bottom; background: #10b981; }
+.rc-label-3 { background: #10b981; color: #fff; font-size: 10px; font-weight: 700; padding: 0 4px; margin-left: 2px; border-radius: 3px; }
+.rc-cursor-4::before { content: ''; display: inline-block; width: 2px; height: 1.3em; margin-left: -1px; vertical-align: text-bottom; background: #06b6d4; }
+.rc-label-4 { background: #06b6d4; color: #fff; font-size: 10px; font-weight: 700; padding: 0 4px; margin-left: 2px; border-radius: 3px; }
+.rc-cursor-5::before { content: ''; display: inline-block; width: 2px; height: 1.3em; margin-left: -1px; vertical-align: text-bottom; background: #3b82f6; }
+.rc-label-5 { background: #3b82f6; color: #fff; font-size: 10px; font-weight: 700; padding: 0 4px; margin-left: 2px; border-radius: 3px; }
+.rc-cursor-6::before { content: ''; display: inline-block; width: 2px; height: 1.3em; margin-left: -1px; vertical-align: text-bottom; background: #8b5cf6; }
+.rc-label-6 { background: #8b5cf6; color: #fff; font-size: 10px; font-weight: 700; padding: 0 4px; margin-left: 2px; border-radius: 3px; }
+.rc-cursor-7::before { content: ''; display: inline-block; width: 2px; height: 1.3em; margin-left: -1px; vertical-align: text-bottom; background: #ec4899; }
+.rc-label-7 { background: #ec4899; color: #fff; font-size: 10px; font-weight: 700; padding: 0 4px; margin-left: 2px; border-radius: 3px; }
+.rc-cursor-8::before { content: ''; display: inline-block; width: 2px; height: 1.3em; margin-left: -1px; vertical-align: text-bottom; background: #14b8a6; }
+.rc-label-8 { background: #14b8a6; color: #fff; font-size: 10px; font-weight: 700; padding: 0 4px; margin-left: 2px; border-radius: 3px; }
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(156, 163, 175, 0.3);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(156, 163, 175, 0.5);
+}
