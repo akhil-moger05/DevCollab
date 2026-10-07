@@ -7,7 +7,7 @@
 [![Firebase](https://img.shields.io/badge/Firebase-Firestore%20%2B%20Auth-FFCA28?logo=firebase&logoColor=black)](https://firebase.google.com)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-4-06B6D4?logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
 
-🔗 **Live Demo:** `https://YOUR-APP.web.app` *(replace with your link)*
+🔗 **Live Demo:**  [gen-lang-client-0427150765.web.app](https://gen-lang-client-0427150765.web.app)
 
 <p align="center">
   <img src="screenshots/landing.png" alt="DevCollab landing page" width="800" />
